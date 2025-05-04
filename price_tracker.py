@@ -18,19 +18,24 @@ selectors = {
     "B&H": '[data-selenium="pricingPrice"]',
     "Staples": ".price-info__final_price_sku span",
     "Verizon": 'div.customBlur.pt-6 p[aria-hidden="false"]',
-    "Walmart": '[data-testid="variant-tile-price-text-Midnight"]'
+    "Walmart": 'span[itemprop="price"]'
 }
 
 headers = {
-    "User-Agent": "Mozilla/5.0"
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+    "Accept-Language": "en-US,en;q=0.9",
 }
 
 def get_price(url, selector):
     try:
-        page = requests.get(url, headers=headers, timeout=15)
+        page = requests.get(url, headers=headers, timeout=30)
         soup = BeautifulSoup(page.content, 'html.parser')
         element = soup.select_one(selector)
-        return element.text.strip() if element else "Price not found"
+        if not element:
+            with open(f"{store}_debug.html", "w", encoding="utf-8") as f:
+                f.write(soup.prettify())
+            return "Price not found"
+        return element.text.strip()
     except Exception as e:
         return f"Error: {e}"
 
