@@ -21,7 +21,7 @@ selectors = {
     "B&H": '[data-selenium="pricingPrice"]',
     "Staples": ".price-info__final_price_sku span",
     "Verizon": 'div.customBlur.pt-6 p[aria-hidden="false"]',
-    "Walmart": '[data-testid="variant-tile-price-text-Midnight"]'
+    "Walmart": '[data-testid="variant-tile-price-text-Midnight"]',
 ... }
 ... 
 ... 
