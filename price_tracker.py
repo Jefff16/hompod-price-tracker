@@ -22,17 +22,21 @@ selectors = {
 }
 
 headers = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36",
     "Accept-Language": "en-US,en;q=0.9",
+    "Accept-Encoding": "gzip, deflate, br",
+    "Connection": "keep-alive",
 }
+
 
 def get_price(url, selector):
     try:
-        page = requests.get(url, headers=headers, timeout=30)
+        page = requests.get(url, headers=headers, timeout=60)
         soup = BeautifulSoup(page.content, 'html.parser')
         element = soup.select_one(selector)
         if not element:
-            with open(f"{store}_debug.html", "w", encoding="utf-8") as f:
+            # Log the full page content to investigate issues
+            with open(f"{url.split('//')[1].split('/')[0]}_debug.html", "w", encoding="utf-8") as f:
                 f.write(soup.prettify())
             return "Price not found"
         return element.text.strip()
