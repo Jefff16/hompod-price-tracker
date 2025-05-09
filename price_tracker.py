@@ -28,10 +28,25 @@ headers = {
     "Connection": "keep-alive",
 }
 
+import random
+
+user_agents = [
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36",
+    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36",
+]
 
 def get_price(url, selector):
     try:
-        page = requests.get(url, headers=headers, timeout=60)
+        # Use a session to maintain a connection
+        session = requests.Session()
+        headers = {
+            "User-Agent": random.choice(user_agents),
+            "Accept-Language": "en-US,en;q=0.9",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Connection": "keep-alive",
+        }
+        page = session.get(url, headers=headers, timeout=60)
         soup = BeautifulSoup(page.content, 'html.parser')
         element = soup.select_one(selector)
         if not element:
@@ -42,6 +57,7 @@ def get_price(url, selector):
         return element.text.strip()
     except Exception as e:
         return f"Error: {e}"
+
 
 def compile_report():
     results = []
